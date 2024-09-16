@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Resume</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Build your resume with ease!</h1>
+    <div id="resume-display" class="resume-container">
+      <!-- Generated resume content will be displayed here -->
+    </div>
+    <!-- Button to Download PDF -->
+    <button id="download-pdf-btn">Download as PDF</button>
+  </div>
+
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const email = urlParams.get('email');
+    const education = urlParams.get('education');
+    const skills = urlParams.get('skills');
+    const experience = urlParams.get('experience');
+
+    // Reference to the resume display area
+    const resumeDisplay = document.getElementById('resume-display');
+
+    // Display the resume content
+    resumeDisplay.innerHTML = `
+      <section>
+        <h1 id="name">${name ? name != null : "Your name"}</h1>
+        <p id="email">${email ? email != null : "youremail@gmail.com"}</p>
+      </section>
+      <section>
+        <h2>Education</h2>
+        <p id="education">${education ? education != null : "enter you education here!"}</p>
+      </section>
+      <section>
+        <h2>Skills</h2>
+        <p id="skills">${skills ? skills != null : "enter your skills here!"}</p>
+      </section>
+      <section>
+        <h2>Work Experience</h2>
+        <p id="experience">${experience ? experience != null : "enter your experience here!"}</p>
+      </section>
+    `;
+
+    // Make the resume content editable on click
+    resumeDisplay.addEventListener('click', function (event) {
+      const target = event.target;
+
+      if (target.tagName === 'P' || target.tagName === 'H1' || target.tagName === 'H2') {
+        const currentText = target.innerText;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentText;
+
+        // Replace the clicked element with an input field
+        target.replaceWith(input);
+
+        // Handle when the input loses focus (update the text)
+        input.addEventListener('blur', function () {
+          const newText = input.value;
+          const newElement = document.createElement(target.tagName.toLowerCase());
+          newElement.textContent = newText;
+          input.replaceWith(newElement);
+        });
+
+        // Handle 'Enter' key to update without losing focus
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            input.blur();
+          }
+        });
+
+        // Automatically focus the input
+        input.focus();
+      }
+    });
+
+    // PDF Download Functionality
+    const downloadBtn = document.getElementById('download-pdf-btn');
+    downloadBtn.addEventListener('click', function () {
+      // Trigger print dialog, where the user can choose "Save as PDF"
+      window.print();
+    });
+  </script>
+</body>
+
+</html>
